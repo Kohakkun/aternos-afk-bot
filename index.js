@@ -9,13 +9,14 @@ const server = http.createServer((req, res) => {
 server.listen(3000, () => console.log('Keep-alive server active on port 3000'));
 
 function createBot() {
-    console.log('Attempting to connect to Bedrock server...');
+    console.log('Connecting directly to Kohakkun Bedrock server...');
     
     const client = bedrock.createClient({
         host: 'Kohakkun.aternos.me',
         port: 64355,
-        username: 'AFK_Robot_Bot',
-        offline: true // Enables Cracked / Offline mode connection
+        username: 'Natan',
+        offline: true,        // For cracked mode
+        skipPing: true        // <-- FORCE BYPASS THE JAVA PING TIMEOUT
     });
 
     client.on('spawn', () => {
@@ -24,12 +25,13 @@ function createBot() {
 
     // Auto-reconnect loop if kicked or if the server restarts
     client.on('close', (reason) => {
-        console.log(`Disconnected: ${reason}. Retrying connection in 15 seconds...`);
+        console.log(`Connection closed. Retrying in 15 seconds...`);
         setTimeout(createBot, 15000);
     });
 
     client.on('error', (err) => {
-        console.log('Error encountered:', err.message);
+        // Suppress benign connection errors so the bot doesn't spam logs
+        console.log('Network event noticed:', err.message);
     });
 }
 
