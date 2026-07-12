@@ -1,21 +1,47 @@
-const http = require('http');
-const { spawn } = require('child_process');
+const bedrock = require("bedrock-protocol");
+const http = require("http");
 
-// Keep-alive web server for Render and UptimeRobot
+// Web listener to keep CodeSandbox active via UptimeRobot pings
 const server = http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Web listener active.');
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("CodeSandbox bot listener active.");
 });
 
-server.listen(3000, () => {
-    console.log('Keep-alive server successfully bound to port 3000');
-    
-    // Boot the Minecraft bot cleanly inside an independent background worker
-    console.log('Spinning up background connection worker...');
-    const botProcess = spawn('node', ['bot.js'], { stdio: 'inherit' });
-
-    botProcess.on('close', (code) => {
-        console.log(`Bot engine exited with code ${code}. Restarting worker...`);
-        spawn('node', ['bot.js'], { stdio: 'inherit' });
-    });
+// CodeSandbox automatically assigns an environment port or defaults to 3000
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Keep-alive web listener running on port ${PORT}`);
 });
+
+function createBot() {
+  console.log(
+    "Connecting to Kohakkun Bedrock server from CodeSandbox environment..."
+  );
+
+  const client = bedrock.createClient({
+    host: "Kohakkun.aternos.me",
+    port: 64355, // Make sure this matches your dynamic Aternos port!
+
+    username: "AFK_Robot_Bot",
+    offline: true,
+    skipPing: true,
+  });
+
+  client.on("spawn", () => {
+    console.log("Success: Bot has entered the Bedrock server!");
+  });
+
+  client.on("close", (reason) => {
+    console.log(
+      `Disconnected: ${reason}. Attempting reconnect in 15 seconds...`
+    );
+    setTimeout(createBot, 15000);
+  });
+
+  client.on("error", (err) => {
+    console.log("Network warning:", err.message);
+  });
+}
+
+// Start the bot connection
+createBot();
