@@ -1,12 +1,12 @@
 {
   "name": "aternos-afk-bot",
   "version": "1.0.0",
-  "description": "AFK bot to keep an Aternos server awake",
+  "description": "AFK bot to keep an Aternos Bedrock server awake",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "mineflayer": "^4.37.1"
+    "bedrock-protocol": "latest"
   }
 }
