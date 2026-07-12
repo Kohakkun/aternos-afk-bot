@@ -13,7 +13,7 @@ function createBot() {
     
     const client = bedrock.createClient({
         host: 'Kohakkun.aternos.me',
-        port: 64355,
+        port: parseInt(process.env.PORT_MC) || 19132,
         username: 'Natan',
         offline: true,        // For cracked mode
         skipPing: true        // <-- FORCE BYPASS THE JAVA PING TIMEOUT
