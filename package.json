@@ -1,7 +1,7 @@
 {
   "name": "aternos-afk-bot",
   "version": "1.0.0",
-  "description": "AFK bot to keep a server online",
+  "description": "AFK bot to keep an Aternos server awake",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
